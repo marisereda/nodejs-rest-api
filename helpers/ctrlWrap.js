@@ -1,4 +1,4 @@
-function cntrlWrap(controller) {
+function ctrlWrap(controller) {
   return async (req, res, next) => {
     try {
       await controller(req, res, next);
@@ -8,4 +8,4 @@ function cntrlWrap(controller) {
   };
 }
 
-module.exports = cntrlWrap;
+module.exports = ctrlWrap;
