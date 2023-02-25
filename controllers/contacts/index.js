@@ -1,4 +1,4 @@
-const ctrlWrap = require("../../helpers");
+const { ctrlWrap } = require("../../helpers");
 const getAll = require("./getAll");
 const add = require("./add");
 const getById = require("./getById");

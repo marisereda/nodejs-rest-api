@@ -1,25 +1,27 @@
 const express = require("express");
-const controllers = require("../../controllers");
+const { ctrlContacts } = require("../../controllers");
+const { auth } = require("../../middlewares");
 
 const { validationBody, validationParams } = require("../../middlewares/");
 const { joiSchemaBody, joiSchemaParams, joiSchemaStatus } = require("../../models/");
+
 const router = express.Router();
 
-router.get("/", controllers.getAll);
+router.get("/", auth, ctrlContacts.getAll);
 
-router.get("/:id", validationParams(joiSchemaParams), controllers.getById);
+router.get("/:id", auth, validationParams(joiSchemaParams), ctrlContacts.getById);
 
-router.post("/", validationBody(joiSchemaBody), controllers.add);
+router.post("/", auth, validationBody(joiSchemaBody), ctrlContacts.add);
 
-router.delete("/:id", validationParams(joiSchemaParams), controllers.removeById);
+router.delete("/:id", auth, validationParams(joiSchemaParams), ctrlContacts.removeById);
 
-router.put("/:id", validationParams(joiSchemaParams), validationBody(joiSchemaBody), controllers.update);
+router.put("/:id", auth, validationParams(joiSchemaParams), validationBody(joiSchemaBody), ctrlContacts.update);
 
 router.patch(
   "/:id/favorite",
   validationParams(joiSchemaParams),
   validationBody(joiSchemaStatus),
-  controllers.updateStatus
+  ctrlContacts.updateStatus
 );
 
 module.exports = router;

@@ -1,5 +1,5 @@
-const { Contact } = require("../../models");
 const { NotFound } = require("http-errors");
+const { Contact } = require("../../models");
 
 const updateStatus = async (req, res) => {
   const { id } = req.params;

@@ -1,5 +1,6 @@
-const { Schema, model } = require("mongoose");
+const { Schema, SchemaTypes, model } = require("mongoose");
 const Joi = require("joi");
+const { emailPattern, validateEmail } = require("../helpers");
 
 // ---------------- MongoDB schema ----------------
 const contactSchema = Schema(
@@ -10,6 +11,7 @@ const contactSchema = Schema(
     },
     email: {
       type: String,
+      validate: [validateEmail, "Please enter a valid email"],
     },
     phone: {
       type: String,
@@ -18,6 +20,10 @@ const contactSchema = Schema(
     favorite: {
       type: Boolean,
       default: false,
+    },
+    owner: {
+      type: SchemaTypes.ObjectId,
+      ref: "user",
     },
   },
   { versionKey: false, timestamps: true }
@@ -33,12 +39,12 @@ const joiSchemaParams = Joi.object({
 // ---------------- Joi schema for body ----------------
 const joiSchemaBody = Joi.object({
   name: Joi.string().required(),
-  email: Joi.string().email().required(),
+  email: Joi.string().pattern(emailPattern).message("Enter a valid email"),
   phone: Joi.string().required(),
   favorite: Joi.bool(),
 });
 
-// ---------------- Joi schema for body favorite status ----------------
+// ---------------- Joi schema for body when update favorite status ----------------
 const joiSchemaStatus = Joi.object({
   favorite: Joi.bool().required(),
 });
