@@ -1,3 +1,4 @@
-const { validationBody, validationParams } = require("./validation");
+const { validationBody, validationParams, validationQuery } = require("./validation");
+const auth = require("./auth");
 
-module.exports = { validationBody, validationParams };
+module.exports = { validationBody, validationParams, validationQuery, auth };
