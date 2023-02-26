@@ -2,24 +2,36 @@ const express = require("express");
 const { ctrlContacts } = require("../../controllers");
 const { auth } = require("../../middlewares");
 
-const { validationBody, validationParams } = require("../../middlewares/");
-const { joiSchemaBody, joiSchemaParams, joiSchemaStatus } = require("../../models/");
+const { validationBody, validationParams, validationQuery } = require("../../middlewares/");
+const {
+  joiSchemaAddContact,
+  joiSchemaAddContactId,
+  joiSchemaUpdateContact,
+  joiSchemaStatus,
+  joiSchemaFilter,
+} = require("../../models/");
 
 const router = express.Router();
 
-router.get("/", auth, ctrlContacts.getAll);
+router.get("/", auth, validationQuery(joiSchemaFilter), ctrlContacts.getAll);
 
-router.get("/:id", auth, validationParams(joiSchemaParams), ctrlContacts.getById);
+router.get("/:id", auth, validationParams(joiSchemaAddContactId), ctrlContacts.getById);
 
-router.post("/", auth, validationBody(joiSchemaBody), ctrlContacts.add);
+router.post("/", auth, validationBody(joiSchemaAddContact), ctrlContacts.add);
 
-router.delete("/:id", auth, validationParams(joiSchemaParams), ctrlContacts.removeById);
+router.delete("/:id", auth, validationParams(joiSchemaAddContactId), ctrlContacts.removeById);
 
-router.put("/:id", auth, validationParams(joiSchemaParams), validationBody(joiSchemaBody), ctrlContacts.update);
+router.put(
+  "/:id",
+  auth,
+  validationParams(joiSchemaAddContactId),
+  validationBody(joiSchemaUpdateContact),
+  ctrlContacts.update
+);
 
 router.patch(
   "/:id/favorite",
-  validationParams(joiSchemaParams),
+  validationParams(joiSchemaAddContactId),
   validationBody(joiSchemaStatus),
   ctrlContacts.updateStatus
 );
