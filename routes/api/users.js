@@ -1,7 +1,7 @@
 const express = require("express");
 const { validationBody, auth, upload } = require("../../middlewares");
 const { ctrlUsers } = require("../../controllers");
-const { joiSchemaLogin, joiSchemaSubscription } = require("../../models");
+const { joiSchemaLogin, joiSchemaSubscription, joiSchemaVerify } = require("../../models");
 const router = express.Router();
 
 router.get("/current", auth, ctrlUsers.getCurrent);
@@ -11,5 +11,6 @@ router.get("/logout", auth, ctrlUsers.logout);
 router.patch("/", auth, validationBody(joiSchemaSubscription), ctrlUsers.updateSubscription);
 router.patch("/avatars", auth, upload.single("avatar"), ctrlUsers.updateAvatar);
 router.get("/verify/:verificationToken", ctrlUsers.verifyUserEmail);
+router.post("/verify", validationBody(joiSchemaVerify), ctrlUsers.checkEmailVerification);
 
 module.exports = router;

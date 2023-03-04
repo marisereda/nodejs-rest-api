@@ -59,6 +59,12 @@ const joiSchemaSubscription = Joi.object({
   subscription: Joi.string().valid("starter", "pro", "business").required(),
 });
 
+// ---------------- Joi schema for body when check Email Verification ----------------
+const joiSchemaVerify = Joi.object({
+  email: Joi.string().pattern(emailPattern).message("Enter a valid email").required(),
+
+});
+
 const User = model("user", userSchema);
 
-module.exports = { User, joiSchemaLogin, joiSchemaSubscription };
+module.exports = { User, joiSchemaLogin, joiSchemaSubscription, joiSchemaVerify };
