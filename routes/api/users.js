@@ -10,5 +10,6 @@ router.post("/login", validationBody(joiSchemaLogin), ctrlUsers.login);
 router.get("/logout", auth, ctrlUsers.logout);
 router.patch("/", auth, validationBody(joiSchemaSubscription), ctrlUsers.updateSubscription);
 router.patch("/avatars", auth, upload.single("avatar"), ctrlUsers.updateAvatar);
+router.get("/verify/:verificationToken", ctrlUsers.verifyUserEmail);
 
 module.exports = router;
