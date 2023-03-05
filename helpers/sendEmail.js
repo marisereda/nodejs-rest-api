@@ -1,24 +1,27 @@
-const sgMail = require("@sendgrid/mail");
+const nodemailer = require("nodemailer");
+const ejs = require("ejs");
+const path = require("path");
 
-const { SENDGRID_API_KEY } = process.env;
-sgMail.setApiKey(SENDGRID_API_KEY);
+const { SMTP_HOST, SMTP_PORT, SMTP_USER, SMTP_PASSWORD } = process.env;
 
-const sendEmail = async ({ email, verificationToken }) => {
+const nodemailerConfig = {
+  host: SMTP_HOST,
+  port: SMTP_PORT,
+  secure: true,
+  auth: { user: SMTP_USER, pass: SMTP_PASSWORD },
+};
+const transporter = nodemailer.createTransport(nodemailerConfig, { from: "mail.nodejs@meta.ua" });
+
+const sendEmail = async ({ email, subject, templateName, templateData }) => {
+  const templatePath = path.resolve(`templates/${templateName}.ejs`);
+  const letterContent = await ejs.renderFile(templatePath, templateData);
   const letter = {
     to: email,
-    from: "marina.gorb@gmail.com",
-    subject: "Registration confirmation",
-    text: `<p>Please <a href='http://localhost:3000/api/users/verify/${verificationToken}'>confirm</a> your email.</p>`,
-    html: `<p>Please <a href='http://localhost:3000/api/users/verify/${verificationToken}'>confirm</a> your email.</p>`,
+    subject,
+    text: letterContent,
+    html: letterContent,
   };
-
-  try {
-    await sgMail.send(letter);
-    console.log("Email was sent successfully");
-  } catch (error) {
-    console.log(error.message);
-    throw new Error("Sendgrid is not available.");
-  }
+  await transporter.sendMail(letter);
 };
 
 module.exports = sendEmail;

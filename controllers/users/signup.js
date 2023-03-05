@@ -16,7 +16,12 @@ const signup = async (req, res) => {
   const newUser = new User({ email, avatarURL, verificationToken });
   newUser.setPassword(password);
   await newUser.save();
-  await sendEmail({ email: newUser.email, verificationToken: newUser.verificationToken });
+  await sendEmail({
+    email: newUser.email,
+    subject: "Registration confirmation",
+    templateName: "confirmLetter",
+    templateData: { verificationToken: newUser.verificationToken, email: newUser.email },
+  });
 
   res
     .status(201)

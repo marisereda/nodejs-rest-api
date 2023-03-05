@@ -15,7 +15,12 @@ const checkEmailVerification = async (req, res) => {
     throw new BadRequest("Verification has already been passed");
   }
 
-  await sendEmail({ email: user.email, verificationToken: user.verificationToken });
+  await sendEmail({
+    email: user.email,
+    subject: "Registration confirmation",
+    templateName: "confirmLetter",
+    templateData: { verificationToken: user.verificationToken, email: user.email },
+  });
   res.status(200).json({ message: `Verification email sent` });
 };
 
