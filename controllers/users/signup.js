@@ -1,8 +1,11 @@
 const { Conflict } = require("http-errors");
 const gravatar = require("gravatar");
+const crypto = require("crypto");
 const { User } = require("../../models");
+const { sendEmail } = require("../../helpers");
 
 const signup = async (req, res) => {
+  const verificationToken = crypto.randomUUID();
   const { email, password } = req.body;
   const user = await User.findOne({ email });
   if (user) {
@@ -10,9 +13,15 @@ const signup = async (req, res) => {
   }
 
   const avatarURL = gravatar.url(email, { protocol: "http" });
-  const newUser = new User({ email, avatarURL });
+  const newUser = new User({ email, avatarURL, verificationToken });
   newUser.setPassword(password);
-  newUser.save();
+  await newUser.save();
+  await sendEmail({
+    email: newUser.email,
+    subject: "Registration confirmation",
+    templateName: "confirmLetter",
+    templateData: { verificationToken: newUser.verificationToken, email: newUser.email },
+  });
 
   res
     .status(201)
