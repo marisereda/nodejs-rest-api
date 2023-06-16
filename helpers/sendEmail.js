@@ -1,6 +1,6 @@
-const nodemailer = require("nodemailer");
-const ejs = require("ejs");
-const path = require("path");
+const nodemailer = require('nodemailer');
+const ejs = require('ejs');
+const path = require('path');
 
 const { SMTP_HOST, SMTP_PORT, SMTP_USER, SMTP_PASSWORD } = process.env;
 
@@ -10,7 +10,9 @@ const nodemailerConfig = {
   secure: true,
   auth: { user: SMTP_USER, pass: SMTP_PASSWORD },
 };
-const transporter = nodemailer.createTransport(nodemailerConfig, { from: "mail.nodejs@meta.ua" });
+const transporter = nodemailer.createTransport(nodemailerConfig, {
+  from: `${process.env.SMTP_USER}`,
+});
 
 const sendEmail = async ({ email, subject, templateName, templateData }) => {
   const templatePath = path.resolve(`templates/${templateName}.ejs`);
